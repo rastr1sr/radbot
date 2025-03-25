@@ -11,6 +11,7 @@ logger = get_logger("PlayCommand")
 class Play(commands.Cog):
     def __init__(self, bot: RadioMonashBot):
         self.bot = bot
+        self.play_channels = {}
 
     @app_commands.command(name="play", description="Play Radio Monash in your voice channel")
     async def play_radio(self, interaction: discord.Interaction):
@@ -52,6 +53,8 @@ class Play(commands.Cog):
             embed.set_footer(text="Use /stop to disconnect | /track for detailed track info")
             await interaction.followup.send(embed=embed)
             logger.info(f"Started playing Radio Monash in {interaction.guild.name} - {voice_channel.name}")
+
+            self.play_channels[guild_id] = interaction.channel_id
         except Exception as e:
             logger.error(f"Error in play command: {e}")
             await interaction.followup.send(f"Error: Unable to play radio stream. {str(e)}", ephemeral=True)
