@@ -53,7 +53,9 @@ class RadioMonashBot(commands.Bot):
                 for guild_id, voice_client in self.my_voice_clients.items():
                     guild = self.get_guild(guild_id)
                     if guild and voice_client.is_connected():
-                        for channel in guild.text_channels:
+                        play_channel_id = self.play_channels.get(guild_id)
+                        if play_channel_id:
+                            channel = guild.get_channel(play_channel_id)
                             if channel.permissions_for(guild.me).send_messages:
                                 embed = self.create_track_embed(new_track)
                                 await channel.send("🎵 Now playing:", embed=embed)
